@@ -3,7 +3,6 @@ package com.example.quizviomus
 import android.media.Image
 
 data class QuizQuestion(
-    //val id: Int,
     val question: String,
     val image: Int,
     val options:List<String>,
@@ -30,6 +29,7 @@ val quizQuestion = listOf<QuizQuestion>(
 
     QuizQuestion(question = "Guess the interval?", image = R.drawable.pic4,
         options = listOf("Major 3rd","Minor 3rd","Diminished 3rd","Augmented 3rd"),
-        correctOption = 1)
+        correctOption = 1), QuizQuestion(question = "Guess the interval", image= R.drawable.pic8, options = listOf("Major 6th","Minor 6th","Diminished 6th","Augmented 6th"),
+        correctOption = 0 )
 
 )

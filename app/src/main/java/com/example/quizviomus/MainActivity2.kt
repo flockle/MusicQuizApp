@@ -16,6 +16,7 @@ import android.widget.TextView
 import androidx.versionedparcelable.VersionedParcelize
 import com.example.quizviomus.databinding.ActivityMain2Binding
 import android.graphics.drawable.Drawable
+import android.os.Handler
 import android.widget.ScrollView
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.delay
@@ -23,8 +24,12 @@ import kotlinx.parcelize.IgnoredOnParcel
 
 @Parcelize
 class MainActivity2() : AppCompatActivity(), Parcelable {
-
-    var questionIndex = 0
+    companion object {
+        var questionIndex = 0
+    }
+    //var questionIndex = 0
+    val delayTime = 1500L
+    var  score  = 0
 
     private fun loadNextQuestion() {
         var questionText = findViewById<TextView>(R.id.tv_question)
@@ -35,9 +40,10 @@ class MainActivity2() : AppCompatActivity(), Parcelable {
         var optionFour = findViewById<TextView>(R.id.tv_option_four)
 
         var initialQuestion = quizQuestion[questionIndex];
-        questionText.text = initialQuestion.question;
+        questionText.text = quizQuestion[questionIndex].question;
 
-        imageView.setImageDrawable(getDrawable(initialQuestion.image))
+        imageView.setImageDrawable(getDrawable(quizQuestion[questionIndex].image))
+        imageView.setImageResource(quizQuestion[questionIndex].image)
         optionOne.text = initialQuestion.options.elementAt(0)
         optionTwo.text = initialQuestion.options.elementAt(1)
         optionThree.text = initialQuestion.options.elementAt(2)
@@ -46,30 +52,41 @@ class MainActivity2() : AppCompatActivity(), Parcelable {
         val btnNext: Button = findViewById(R.id.btn_next)
     }
 
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
+        var previousActivity = getIntent().getStringExtra("FROM_ACTIVITY")
 
+        if (previousActivity != null) {
+            if (previousActivity == "MainActivity3") {
+                score++
+                questionIndex++
+            } else if (previousActivity == "MainActivity4") {
+                questionIndex++
+                println("err")
+            }
+        }
+        if(questionIndex == quizQuestion.size){
+            val intent = Intent(this, MainActivity5::class.java)
+            startActivity(intent)
+        }
         loadNextQuestion()
-
         val btnNext: Button = findViewById(R.id.btn_next)
-
         btnNext.setOnClickListener {
-            questionIndex++
+            if(questionIndex == quizQuestion.size){
+                val intent = Intent(this, MainActivity5::class.java)
+                startActivity(intent)
+            }
 
             System.err.println(questionIndex)
             loadNextQuestion()
-
+            questionIndex++
         }
-        
+
         //var imageView = findViewById<ImageView>(R.id.correctAns)
         val tv_option_one: Button = findViewById(R.id.tv_option_one)
         //val tv_option_two: Button = findViewById(R.id.tv_option_two)
-        tv_option_one.setOnClickListener{
+        tv_option_one.setOnClickListener {
             var correctAns = quizQuestion[questionIndex].correctOption
             if (correctAns == 0) {
                 val intent = Intent(this, MainActivity3::class.java)
@@ -79,11 +96,10 @@ class MainActivity2() : AppCompatActivity(), Parcelable {
                 startActivity(intent)
                 questionIndex++
             }
-
         }
 
         val tv_option_two: Button = findViewById(R.id.tv_option_two)
-        tv_option_two.setOnClickListener{
+        tv_option_two.setOnClickListener {
             var correctAns = quizQuestion[questionIndex].correctOption
             if (correctAns == 1) {
                 val intent = Intent(this, MainActivity3::class.java)
