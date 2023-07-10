@@ -25,11 +25,19 @@ import kotlinx.parcelize.IgnoredOnParcel
 @Parcelize
 class MainActivity2() : AppCompatActivity(), Parcelable {
     companion object {
+        @JvmStatic
         var questionIndex = 0
+        @JvmStatic
+        var score = 0
+
     }
-    //var questionIndex = 0
+
+
+
+
     val delayTime = 1500L
-    var  score  = 0
+
+
 
     private fun loadNextQuestion() {
         var questionText = findViewById<TextView>(R.id.tv_question)
@@ -60,6 +68,7 @@ class MainActivity2() : AppCompatActivity(), Parcelable {
         if (previousActivity != null) {
             if (previousActivity == "MainActivity3") {
                 score++
+                println("NIH $score")
                 questionIndex++
             } else if (previousActivity == "MainActivity4") {
                 questionIndex++
@@ -68,13 +77,18 @@ class MainActivity2() : AppCompatActivity(), Parcelable {
         }
         if(questionIndex == quizQuestion.size){
             val intent = Intent(this, MainActivity5::class.java)
+            intent.putExtra("SCORE", score)
+            //score.text.toString()
             startActivity(intent)
+
+
         }
         loadNextQuestion()
         val btnNext: Button = findViewById(R.id.btn_next)
         btnNext.setOnClickListener {
             if(questionIndex == quizQuestion.size){
                 val intent = Intent(this, MainActivity5::class.java)
+                //intent.putExtra("SCORE", score)
                 startActivity(intent)
             }
 
